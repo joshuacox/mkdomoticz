@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 	libusb-0.1-4 libusb-dev \
 	zlib1g-dev \
 	libudev-dev \
-	linux-headers-amd64
+	linux-headers
 
 ## OpenZwave installation
 # grep git version of openzwave
