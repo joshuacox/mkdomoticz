@@ -13,7 +13,7 @@ echo 'en_US.ISO-8859-15 ISO-8859-15'>>/etc/locale.gen ; \
 echo 'en_US ISO-8859-1'>>/etc/locale.gen ; \
 echo 'en_US.UTF-8 UTF-8'>>/etc/locale.gen ; \
 locale-gen ; \
-apt-get remove libboost-dev libboost-thread-dev libboost-system-dev libboost-atomic-dev libboost-regex-dev \
+apt-get -qqy remove libboost-dev libboost-thread-dev libboost-system-dev libboost-atomic-dev libboost-regex-dev \
 libboost-date-time1.55-dev libboost-date-time1.55.0 libboost-atomic1.55.0 libboost-regex1.55.0 libboost-iostreams1.55.1 \
 libboost-iostreams1.55.0 libboost-iostreams1.55.0 libboost-iostreams1.55.0 \
 libboost-serialization1.55-dev libboost-serialization1.55.0 libboost-system1.55-dev \
