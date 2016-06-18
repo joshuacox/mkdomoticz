@@ -1,65 +1,56 @@
-FROM local-jessie
+FROM local-stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV LANG en_US.UTF-8
+# install packages
+RUN apt-get update && apt-get install -y \
+	git \
+	libssl1.0.2 libssl-dev \
+	build-essential cmake \
+	libboost-dev \
+	libboost-thread1.58.0 libboost-thread-dev \
+	libboost-system1.58.0 libboost-system-dev \
+	libboost-date-time1.58.0 libboost-date-time-dev \
+	libsqlite3-0 libsqlite3-dev \
+	curl libcurl3 libcurl4-openssl-dev \
+	libusb-0.1-4 libusb-dev \
+	zlib1g-dev \
+	libudev-dev \
+	linux-headers-amd64
 
-RUN apt-get -qq update; \
-apt-get -qqy dist-upgrade ; \
-apt-get -qqy --no-install-recommends install wget git
+## OpenZwave installation
+# grep git version of openzwave
+RUN git clone --depth 2 https://github.com/OpenZWave/open-zwave.git /src/open-zwave
 
-RUN mkdir -p /src/domoticz ; \
-cd /src/domoticz ; \
-wget http://www.domoticz.com/releases/release/domoticz_linux_armv7l.tgz ; \
-tar xvfz domoticz_linux_armv7l.tgz ; \
-rm domoticz_linux_armv7l.tgz
+# untar the files
+WORKDIR /src/open-zwave
 
-RUN mkdir /tmp/boost ; \
-cd /tmp/boost ; \
-wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz/download ; \
+# compile
+RUN make
 
-RUN apt-get -qq update; \
-apt-get -qqy dist-upgrade ; \
-apt-get -qqy --no-install-recommends install locales \
-cmake make gcc g++ libssl-dev git curl libcurl4-openssl-dev libusb-dev wiringpi \
-wget libudev-dev sudo procps ca-certificates wget pwgen supervisor; \
-echo 'en_US.ISO-8859-15 ISO-8859-15'>>/etc/locale.gen ; \
-echo 'en_US ISO-8859-1'>>/etc/locale.gen ; \
-echo 'en_US.UTF-8 UTF-8'>>/etc/locale.gen ; \
-locale-gen ; \
-apt-get -qqy remove libboost-dev libboost-thread-dev libboost-system-dev libboost-atomic-dev libboost-regex-dev \
-libboost-date-time1.55-dev libboost-date-time1.55.0 libboost-atomic1.55.0 libboost-regex1.55.0 libboost-iostreams1.55.1 \
-libboost-iostreams1.55.0 libboost-iostreams1.55.0 libboost-iostreams1.55.0 \
-libboost-serialization1.55-dev libboost-serialization1.55.0 libboost-system1.55-dev \
-libboost-system1.55.0 libboost-thread1.55-dev libboost-thread1.55.0 libboost1.55-dev ; \
-apt-get -y autoremove ; \
-apt-get clean ; \
-rm -Rf /var/lib/apt/lists/*
+# "install" in order to be found by domoticz
+RUN ln -s /src/open-zwave /src/open-zwave-read-only
 
-RUN cd /tmp/boost ; \
-tar xvfz download ; \
-rm download ; \
-cd boost_1_60_0/ ; \
-./bootstrap.sh ; \
-./b2 stage threading=multi link=static --with-thread --with-date_time --with-system --with-atomic --with-regex ; \
-./b2 install threading=multi link=static --with-thread --with-date_time --with-system --with-atomic --with-regex ; \
-cd /tmp ; \
-rm -Rf /tmp/boost
+## Domoticz installation
 
-RUN cd /tmp ; \
-git clone https://github.com/OpenZWave/open-zwave open-zwave-read-only ; \
-cd open-zwave-read-only ; \
-git pull ; \
-make -j 3 ; \
-cd /tmp ; \
-rm -Rf open-zwave
+# clone git source in src
+RUN git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz
 
-RUN git clone https://github.com/domoticz/domoticz.git dev-domoticz ; \
-cd dev-domoticz ; \
-cmake -DCMAKE_BUILD_TYPE=Release CMakeLists.txt ; \
-make -j 3 ; \
-cp domoticz.sh /etc/init.d ; \
-chmod +x /etc/init.d/domoticz.sh
+# Domoticz needs the full history to be able to calculate the version string
+WORKDIR /src/domoticz
+RUN git fetch --unshallow
+
+# prepare makefile
+RUN cmake -DCMAKE_BUILD_TYPE=Release . 
+
+# compile
+RUN make
+
+# remove git and tmp dirs
+RUN apt-get remove -y git cmake linux-headers-amd64 build-essential libssl-dev libboost-dev libboost-thread-dev libboost-system-dev libsqlite3-dev libcurl4-openssl-dev libusb-dev zlib1g-dev libudev-dev && \
+   apt-get autoremove -y && \ 
+   apt-get clean && \
+   rm -rf /var/lib/apt/lists/*
+
 
 VOLUME /config
 
