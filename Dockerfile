@@ -22,7 +22,7 @@ apt-get -y autoremove ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
-RUN mkdir /src/domoticz ; \
+RUN mkdir -p /src/domoticz ; \
 cd /src/domoticz ; \
 wget http://www.domoticz.com/releases/release/domoticz_linux_armv7l.tgz ; \
 tar xvfz domoticz_linux_armv7l.tgz ; \
