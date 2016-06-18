@@ -8,7 +8,7 @@ RUN apt-get -qq update; \
 apt-get -qqy dist-upgrade ; \
 apt-get -qqy --no-install-recommends install locales \
 cmake make gcc g++ libssl-dev git curl libcurl4-openssl-dev libusb-dev wiringpi \
-libudev-dev sudo procps ca-certificates wget pwgen supervisor; \
+wget libudev-dev sudo procps ca-certificates wget pwgen supervisor; \
 echo 'en_US.ISO-8859-15 ISO-8859-15'>>/etc/locale.gen ; \
 echo 'en_US ISO-8859-1'>>/etc/locale.gen ; \
 echo 'en_US.UTF-8 UTF-8'>>/etc/locale.gen ; \
