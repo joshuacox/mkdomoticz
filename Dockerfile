@@ -6,6 +6,20 @@ ENV LANG en_US.UTF-8
 
 RUN apt-get -qq update; \
 apt-get -qqy dist-upgrade ; \
+apt-get -qqy --no-install-recommends install wget git
+
+RUN mkdir -p /src/domoticz ; \
+cd /src/domoticz ; \
+wget http://www.domoticz.com/releases/release/domoticz_linux_armv7l.tgz ; \
+tar xvfz domoticz_linux_armv7l.tgz ; \
+rm domoticz_linux_armv7l.tgz
+
+RUN mkdir /tmp/boost ; \
+cd /tmp/boost ; \
+wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz/download ; \
+
+RUN apt-get -qq update; \
+apt-get -qqy dist-upgrade ; \
 apt-get -qqy --no-install-recommends install locales \
 cmake make gcc g++ libssl-dev git curl libcurl4-openssl-dev libusb-dev wiringpi \
 wget libudev-dev sudo procps ca-certificates wget pwgen supervisor; \
@@ -22,17 +36,7 @@ apt-get -y autoremove ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
-RUN which wget; sleep 10
-
-RUN mkdir -p /src/domoticz ; \
-cd /src/domoticz ; \
-wget http://www.domoticz.com/releases/release/domoticz_linux_armv7l.tgz ; \
-tar xvfz domoticz_linux_armv7l.tgz ; \
-rm domoticz_linux_armv7l.tgz
-
-RUN mkdir /tmp/boost ; \
-cd /tmp/boost ; \
-wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz/download ; \
+RUN cd /tmp/boost ; \
 tar xvfz download ; \
 rm download ; \
 cd boost_1_60_0/ ; \
