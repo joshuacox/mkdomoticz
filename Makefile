@@ -15,18 +15,19 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: config build rundocker
+run: PORT config build rundocker
 
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
-	-P \
+	-p $(PORT):8080 \
 	-v $(`pwd`)/datadir:/config \
 	-t $(TAG)
 
@@ -58,3 +59,8 @@ datadir/domoticz.db:
 	tar jxvf domoticz.db.tz2
 	mkdir -p datadir
 	mv domoticz.db datadir/
+
+PORT:
+	@while [ -z "$$PORT" ]; do \
+		read -r -p "Enter the port you wish to associate with this container [PORT]: " PORT; echo "$$PORT">>PORT; cat PORT; \
+	done ;
