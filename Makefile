@@ -26,6 +26,7 @@ rundocker:
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	--privileged \
 	-d \
 	-p $(PORT):8080 \
 	-v $(`pwd`)/datadir:/config \
