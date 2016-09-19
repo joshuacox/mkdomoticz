@@ -17,9 +17,26 @@ build: NAME TAG builddocker
 # run a plain container
 run: PORT config build rundocker
 
+init: PORT config build initdocker
+
+initdocker:
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval NAME := $(shell cat NAME))
+	$(eval PORT := $(shell cat PORT))
+	$(eval TAG := $(shell cat TAG))
+	chmod 777 $(TMP)
+	@docker run --name=$(NAME)-init \
+	--cidfile="cid" \
+	-v $(TMP):/tmp \
+	--privileged \
+	-d \
+	-p $(PORT):8080 \
+	-t $(TAG)
+
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
@@ -29,7 +46,7 @@ rundocker:
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
-	-v $(`pwd`)/datadir:/config \
+	-v $(DATADIR)/config:/config \
 	-t $(TAG)
 
 builddocker:
@@ -65,3 +82,10 @@ PORT:
 	@while [ -z "$$PORT" ]; do \
 		read -r -p "Enter the port you wish to associate with this container [PORT]: " PORT; echo "$$PORT">>PORT; cat PORT; \
 	done ;
+
+grab: DATADIR
+
+DATADIR:
+	-@mkdir -p datadir/domoticz
+	docker cp `cat cid`:/config  - |sudo tar -C datadir/ -pxf -
+	echo `pwd`/datadir > DATADIR
