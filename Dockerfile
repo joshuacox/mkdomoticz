@@ -1,4 +1,4 @@
-FROM local-stretch
+FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
 # install packages
