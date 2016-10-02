@@ -83,9 +83,26 @@ PORT:
 		read -r -p "Enter the port you wish to associate with this container [PORT]: " PORT; echo "$$PORT">>PORT; cat PORT; \
 	done ;
 
+REGISTRY:
+	@while [ -z "$$REGISTRY" ]; do \
+		read -r -p "Enter the registry you wish to associate with this container [REGISTRY]: " REGISTRY; echo "$$REGISTRY">>REGISTRY; cat REGISTRY; \
+	done ;
+
+REGISTRY_PORT:
+	@while [ -z "$$REGISTRY_PORT" ]; do \
+		read -r -p "Enter the port of the registry you wish to associate with this container, usually 5000 [REGISTRY_PORT]: " REGISTRY_PORT; echo "$$REGISTRY_PORT">>REGISTRY_PORT; cat REGISTRY_PORT; \
+	done ;
+
 grab: DATADIR
 
 DATADIR:
 	-@mkdir -p datadir/domoticz
 	docker cp `cat cid`:/config  - |sudo tar -C datadir/ -pxf -
 	echo `pwd`/datadir > DATADIR
+
+push: TAG REGISTRY REGISTRY_PORT
+	$(eval TAG := $(shell cat TAG))
+	$(eval REGISTRY := $(shell cat REGISTRY))
+	$(eval REGISTRY_PORT := $(shell cat REGISTRY_PORT))
+	docker tag $(TAG) $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
+	docker push $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
