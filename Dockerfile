@@ -1,6 +1,8 @@
 FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
+ENV MKDOMOTICZ_UPDATE 20161004
+
 # install packages
 RUN apt-get update && apt-get install -y \
 	git \
