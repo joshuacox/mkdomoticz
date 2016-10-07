@@ -15,9 +15,9 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: PORT config build rundocker
+run: PORT config build rm rundocker
 
-init: PORT config build initdocker
+init: PORT config build rm initdocker
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -106,3 +106,10 @@ push: TAG REGISTRY REGISTRY_PORT
 	$(eval REGISTRY_PORT := $(shell cat REGISTRY_PORT))
 	docker tag $(TAG) $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
 	docker push $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
+
+armbuild: build
+	docker tag joshuacox/mkdomoticz joshuacox/mkdomoticz:arm
+	docker push joshuacox/mkdomoticz:arm
+
+
+
