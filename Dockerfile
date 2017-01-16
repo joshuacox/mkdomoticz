@@ -8,10 +8,7 @@ RUN apt-get update && apt-get install -y \
 	git \
 	libssl1.0.2 libssl-dev \
 	build-essential cmake \
-	libboost-dev \
-	libboost-thread1.58.0 libboost-thread-dev \
-	libboost-system1.58.0 libboost-system-dev \
-	libboost-date-time1.58.0 libboost-date-time-dev \
+	libboost-all-dev \
 	libsqlite3-0 libsqlite3-dev \
 	curl libcurl3 libcurl4-openssl-dev \
 	libusb-0.1-4 libusb-dev \
