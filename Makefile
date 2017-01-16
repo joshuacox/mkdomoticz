@@ -111,5 +111,5 @@ armbuild: build
 	docker tag joshuacox/mkdomoticz joshuacox/mkdomoticz:arm
 	docker push joshuacox/mkdomoticz:arm
 
-
-
+pull:
+	docker pull `cat TAG`

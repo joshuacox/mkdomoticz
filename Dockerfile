@@ -1,23 +1,21 @@
-FROM local-stretch
+FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATE 20161004
+ENV MKDOMOTICZ_UPDATE 20170116
 
 # install packages
 RUN apt-get update && apt-get install -y \
 	git \
 	libssl1.0.2 libssl-dev \
 	build-essential cmake \
-	libboost-dev \
-	libboost-thread1.58.0 libboost-thread-dev \
-	libboost-system1.58.0 libboost-system-dev \
-	libboost-date-time1.58.0 libboost-date-time-dev \
+	libboost-all-dev \
 	libsqlite3-0 libsqlite3-dev \
 	curl libcurl3 libcurl4-openssl-dev \
 	libusb-0.1-4 libusb-dev \
 	zlib1g-dev \
 	libudev-dev \
-    linux-headers-armmp
+    fail2ban
+    # linux-headers-generic
 
 ## OpenZwave installation
 # grep git version of openzwave

@@ -15,7 +15,7 @@ Feel free to make an issue or pull request [here](https://github.com/joshuacox/m
 
 should ask you any pertinent questions and bring up a container running domoticz
 
-### Usage
+### DockerHub Usage
 
 ```
 docker pull joshuacox/mkdomoticz
@@ -53,5 +53,8 @@ First run an instance like above and `grab` it's data dirctory:
 
 there are branches for raspberryPi as well, checkout the `arm` branch to pull my image from docker hub, or use the `local-stretch` to build 
 locally though it should be noted you'lll need a locally built stretch image named `local-stretch`, I have another [Makefile 
+=======
+locally though it should be noted you'll need a locally built stretch image named `local-stretch`, I have another [Makefile 
+>>>>>>> master
 repo](https://github.com/joshuacox/local-debian) for that as  well.  Merely `make stretch` and a local stretch image can be built using 
 debootstrap (which is available in most distribution [even ones not based on debian])
