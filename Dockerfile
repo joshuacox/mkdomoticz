@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM local-stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
 ENV MKDOMOTICZ_UPDATE 20170116
