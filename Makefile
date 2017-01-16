@@ -106,3 +106,6 @@ push: TAG REGISTRY REGISTRY_PORT
 	$(eval REGISTRY_PORT := $(shell cat REGISTRY_PORT))
 	docker tag $(TAG) $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
 	docker push $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
+
+pull:
+	docker pull `cat TAG`
