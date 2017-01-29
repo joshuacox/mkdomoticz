@@ -17,6 +17,10 @@ build: NAME TAG builddocker
 # run a plain container
 run: PORT config build rundocker
 
+prod: run
+
+temp: init
+
 init: PORT config build initdocker
 
 initdocker:
