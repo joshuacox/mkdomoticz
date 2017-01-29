@@ -15,7 +15,7 @@ Feel free to make an issue or pull request [here](https://github.com/joshuacox/m
 
 should ask you any pertinent questions and bring up a container running domoticz
 
-### Usage
+### DockerHub Usage
 
 ```
 docker pull joshuacox/mkdomoticz
@@ -31,14 +31,35 @@ docker pull joshuacox/mkdomoticz
         -t joshuacox/mkdomoticz
 ```
 
+or simply use the `init` recipe from  the Makefile
+
+```
+make init
+```
+
 ### Persistence
 
 First run an instance like above and `grab` it's data dirctory:
 
 ```
+make grab
+```
+
+or manually
+
+```
         mkdir -p datadir/domoticz
         docker cp `cat cid`:/config  - |sudo tar -C datadir/ -pxf -
 ```
+
+then kill off the original container and run the persistent image
+
+```
+make clean
+make run
+```
+
+or manually
 
 ```
  @docker run --name=domoticz \
@@ -52,6 +73,6 @@ First run an instance like above and `grab` it's data dirctory:
 ### Branches
 
 there are branches for raspberryPi as well, checkout the `arm` branch to pull my image from docker hub, or use the `local-stretch` to build 
-locally though it should be noted you'lll need a locally built stretch image named `local-stretch`, I have another [Makefile 
+locally though it should be noted you'll need a locally built stretch image named `local-stretch`, I have another [Makefile 
 repo](https://github.com/joshuacox/local-debian) for that as  well.  Merely `make stretch` and a local stretch image can be built using 
 debootstrap (which is available in most distribution [even ones not based on debian])
