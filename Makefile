@@ -15,13 +15,13 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: PORT config build rundocker
+run: PORT config pull rundocker
 
 prod: run
 
 temp: init
 
-init: PORT config build initdocker
+init: PORT config pull initdocker
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
