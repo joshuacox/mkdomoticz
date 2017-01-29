@@ -15,7 +15,7 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: PORT config pull rundocker
+run: PORT NAME TAG pull rundocker
 
 prod: run
 
