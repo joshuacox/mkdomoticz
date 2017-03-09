@@ -15,13 +15,13 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: PORT pull rundocker
+run:  TZ PORT pull rundocker
 
 prod: run
 
 temp: init
 
-init: PORT config pull initdocker
+init: TZ PORT config pull initdocker
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -81,6 +81,11 @@ datadir/domoticz.db:
 	tar jxvf domoticz.db.tz2
 	mkdir -p datadir
 	mv domoticz.db datadir/
+
+TZ:
+	@while [ -z "$$TZ" ]; do \
+		read -r -p "Enter the timezone you wish to associate with this container [America/Denver]: " TZ; echo "$$TZ">>TZ; cat TZ; \
+	done ;
 
 PORT:
 	@while [ -z "$$PORT" ]; do \
