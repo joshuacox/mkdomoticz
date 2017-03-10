@@ -40,6 +40,7 @@ initdocker:
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval TZ := $(shell cat TZ))
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
@@ -47,6 +48,7 @@ rundocker:
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	-e TZ=$(TZ) \
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
