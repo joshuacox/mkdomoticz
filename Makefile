@@ -15,13 +15,13 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: PORT NAME TAG pull rundocker
+run:  TZ PORT rundocker
 
 prod: run
 
 temp: init
 
-init: PORT config pull initdocker
+init: TZ PORT config pull initdocker
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -40,6 +40,7 @@ initdocker:
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval TZ := $(shell cat TZ))
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
@@ -47,6 +48,7 @@ rundocker:
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	-e TZ=$(TZ) \
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
@@ -81,6 +83,11 @@ datadir/domoticz.db:
 	tar jxvf domoticz.db.tz2
 	mkdir -p datadir
 	mv domoticz.db datadir/
+
+TZ:
+	@while [ -z "$$TZ" ]; do \
+		read -r -p "Enter the timezone you wish to associate with this container [America/Denver]: " TZ; echo "$$TZ">>TZ; cat TZ; \
+	done ;
 
 PORT:
 	@while [ -z "$$PORT" ]; do \
