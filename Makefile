@@ -15,7 +15,7 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run:  TZ PORT pull rundocker
+run:  TZ PORT rundocker
 
 prod: run
 
