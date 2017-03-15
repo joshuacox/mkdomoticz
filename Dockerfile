@@ -1,7 +1,7 @@
 FROM local-stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATE 20170116
+ENV MKDOMOTICZ_UPDATE 20170315
 
 # install packages
 RUN apt-get update && apt-get install -y \
@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
 	libusb-0.1-4 libusb-dev \
 	zlib1g-dev \
 	libudev-dev \
+	python3-dev python3-pip \
     fail2ban
     # linux-headers-generic
 
@@ -40,10 +41,12 @@ WORKDIR /src/domoticz
 RUN git fetch --unshallow
 
 # prepare makefile
-RUN cmake -DCMAKE_BUILD_TYPE=Release . 
+RUN cmake -DCMAKE_BUILD_TYPE=Release .
 
 # compile
 RUN make
+
+RUN pip3 install -U ouimeaux
 
 # remove git and tmp dirs
 RUN apt-get remove -y git cmake linux-headers-amd64 build-essential libssl-dev libboost-dev libboost-thread-dev libboost-system-dev libsqlite3-dev libcurl4-openssl-dev libusb-dev zlib1g-dev libudev-dev && \
@@ -56,5 +59,8 @@ VOLUME /config
 
 EXPOSE 8080
 
-ENTRYPOINT ["/src/domoticz/domoticz", "-dbase", "/config/domoticz.db", "-log", "/config/domoticz.log"]
-CMD ["-www", "8080"]
+COPY start.sh /start.sh
+
+#ENTRYPOINT ["/src/domoticz/domoticz", "-dbase", "/config/domoticz.db", "-log", "/config/domoticz.log"]
+#CMD ["-www", "8080"]
+CMD ["/bin/bash", "/start.sh"]
