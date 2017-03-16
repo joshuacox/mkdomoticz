@@ -23,6 +23,8 @@ temp: init
 
 init: TZ PORT config pull initdocker
 
+auto: init next
+
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
@@ -124,3 +126,18 @@ armbuild: build
 
 pull:
 	docker pull `cat TAG`
+
+next: waitforport grab clean place run
+
+place:
+	mkdir -p /exports/mkdomoticz
+	mv datadir /exports/mkdomoticz/
+	echo '/exports/mkdomoticz/datadir' > DATADIR
+	sync
+	echo 'Moved datadir to /exports/mkdomoticz'
+
+waitforport:
+	$(eval PORT := $(shell cat PORT))
+	@echo "Waiting for port to become available"
+	@while ! curl --output /dev/null --silent --head --fail http://localhost:$(PORT); do sleep 10 && echo -n .; done;
+	@echo "check port $(PORT), it appears that now it is up!"
