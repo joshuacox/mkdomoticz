@@ -11,7 +11,6 @@ Feel free to make an issue or pull request [here](https://github.com/joshuacox/m
 
 ### Usage
 
-
 `make auto`
 
 should ask you any pertinent questions and bring up a container running domoticz

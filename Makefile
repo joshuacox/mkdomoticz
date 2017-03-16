@@ -15,7 +15,7 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run:  TZ PORT rundocker
+run:  TZ PORT DATADIR rundocker
 
 prod: run
 
@@ -23,7 +23,7 @@ temp: init
 
 init: TZ PORT config pull initdocker
 
-auto: init next
+auto: DATADIR init next
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
