@@ -15,7 +15,7 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run:  TZ PORT rundocker
+run:  TZ PORT DATADIR rundocker
 
 prod: run
 
@@ -23,7 +23,7 @@ temp: init
 
 init: TZ PORT config pull initdocker
 
-auto: init next
+auto: DATADIR init next
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -96,6 +96,11 @@ PORT:
 		read -r -p "Enter the port you wish to associate with this container [PORT]: " PORT; echo "$$PORT">>PORT; cat PORT; \
 	done ;
 
+DATADIR:
+	@while [ -z "$$DATADIR" ]; do \
+		read -r -p "Enter the datadir you wish to associate with this container (i.e. /exports/mkdomoticz) [DATADIR]: " DATADIR; echo "$$DATADIR">>DATADIR; cat DATADIR; \
+	done ;
+
 REGISTRY:
 	@while [ -z "$$REGISTRY" ]; do \
 		read -r -p "Enter the registry you wish to associate with this container [REGISTRY]: " REGISTRY; echo "$$REGISTRY">>REGISTRY; cat REGISTRY; \
@@ -106,12 +111,11 @@ REGISTRY_PORT:
 		read -r -p "Enter the port of the registry you wish to associate with this container, usually 5000 [REGISTRY_PORT]: " REGISTRY_PORT; echo "$$REGISTRY_PORT">>REGISTRY_PORT; cat REGISTRY_PORT; \
 	done ;
 
-grab: DATADIR
+grab: DATADIR GRABDATADIR
 
-DATADIR:
+GRABDATADIR:
 	-@mkdir -p datadir/domoticz
 	docker cp `cat cid`:/config  - |sudo tar -C datadir/ -pxf -
-	echo `pwd`/datadir > DATADIR
 
 push: TAG REGISTRY REGISTRY_PORT
 	$(eval TAG := $(shell cat TAG))
@@ -130,11 +134,12 @@ pull:
 next: waitforport grab clean place run
 
 place:
-	mkdir -p /exports/mkdomoticz
-	mv datadir /exports/mkdomoticz/
-	echo '/exports/mkdomoticz/datadir' > DATADIR
+	$(eval DATADIR := $(shell cat DATADIR))
+	mkdir -p $(DATADIR)
+	mv datadir $(DATADIR)/
+	echo "$(DATADIR)/datadir" > DATADIR
 	sync
-	echo 'Moved datadir to /exports/mkdomoticz'
+	@echo "Moved datadir to $(DATADIR)"
 
 waitforport:
 	$(eval PORT := $(shell cat PORT))
