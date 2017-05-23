@@ -40,7 +40,7 @@ cmake -DCMAKE_BUILD_TYPE=Release . && \
 make && \
 # Install
 install -m 0555 domoticz /usr/local/bin/domoticz && \
-cd / && \
+cd /tmp && \
 # Cleanup
 rm -Rf /src/domoticz && \
 
