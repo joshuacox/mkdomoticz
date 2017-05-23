@@ -15,41 +15,40 @@ RUN apt-get update && apt-get install -y \
 	zlib1g-dev \
 	libudev-dev \
 	python3-dev python3-pip \
-    fail2ban
+    fail2ban && \
     # linux-headers-generic
 
 ## OpenZwave installation
 # grep git version of openzwave
-RUN git clone --depth 2 https://github.com/OpenZWave/open-zwave.git /src/open-zwave
-
-# untar the files
-WORKDIR /src/open-zwave
-
+git clone --depth 2 https://github.com/OpenZWave/open-zwave.git /src/open-zwave && \
+cd /src/open-zwave && \
 # compile
-RUN make
+make && \
 
 # "install" in order to be found by domoticz
-RUN ln -s /src/open-zwave /src/open-zwave-read-only
+ln -s /src/open-zwave /src/open-zwave-read-only && \
 
 ## Domoticz installation
-
 # clone git source in src
-RUN git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz
-
+git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
 # Domoticz needs the full history to be able to calculate the version string
-WORKDIR /src/domoticz
-RUN git fetch --unshallow
-
+cd /src/domoticz && \
+git fetch --unshallow && \
 # prepare makefile
-RUN cmake -DCMAKE_BUILD_TYPE=Release .
-
+cmake -DCMAKE_BUILD_TYPE=Release . && \
 # compile
-RUN make
+make && \
+# Install
+install -m 0555 domoticz /usr/local/bin/domoticz && \
+cd / && \
+# Cleanup
+rm -Rf /src/domoticz && \
 
-RUN pip3 install -U ouimeaux
+# ouimeaux
+pip3 install -U ouimeaux && \
 
 # remove git and tmp dirs
-RUN apt-get remove -y git cmake linux-headers-amd64 build-essential libssl-dev libboost-dev libboost-thread-dev libboost-system-dev libsqlite3-dev libcurl4-openssl-dev libusb-dev zlib1g-dev libudev-dev && \
+apt-get remove -y git cmake linux-headers-amd64 build-essential libssl-dev libboost-dev libboost-thread-dev libboost-system-dev libsqlite3-dev libcurl4-openssl-dev libusb-dev zlib1g-dev libudev-dev && \
    apt-get autoremove -y && \ 
    apt-get clean && \
    rm -rf /var/lib/apt/lists/*
