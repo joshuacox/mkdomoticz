@@ -43,6 +43,24 @@ initdocker:
 	-p $(PORT):8080 \
 	-t $(TAG)
 
+debugdocker:
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval NAME := $(shell cat NAME))
+	$(eval PORT := $(shell cat PORT))
+	$(eval TAG := $(shell cat TAG))
+	$(eval DOMOTICZ_OPTS := $(shell cat DOMOTICZ_OPTS))
+	$(eval TZ := $(shell cat TZ))
+	chmod 777 $(TMP)
+	@docker run --name=$(NAME)-init \
+	--cidfile="cid" \
+	-e TZ=$(TZ) \
+	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
+	-v $(TMP):/tmp \
+	--privileged \
+	-d \
+	-p $(PORT):8080 \
+	-t $(TAG) /bin/bash
+
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
