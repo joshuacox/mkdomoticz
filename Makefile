@@ -119,7 +119,7 @@ TZ:
 
 DOMOTICZ_OPTS:
 	@while [ -z "$$DOMOTICZ_OPTS" ]; do \
-		read -r -p "Enter the domoticz options you wish to associate with this container [America/Denver]: " DOMOTICZ_OPTS; echo "$$DOMOTICZ_OPTS">>DOMOTICZ_OPTS; cat DOMOTICZ_OPTS; \
+		read -r -p "Enter the domoticz options you wish to associate with this container: " DOMOTICZ_OPTS; echo "$$DOMOTICZ_OPTS">>DOMOTICZ_OPTS; cat DOMOTICZ_OPTS; \
 	done ;
 
 PORT:
