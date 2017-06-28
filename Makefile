@@ -15,15 +15,15 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run:  DOMOTICZ_OPTS TZ PORT LOGDIR DATADIR rundocker
+run:  TZ PORT LOGDIR DATADIR rundocker
 
 prod: run
 
 temp: init
 
-init: DOMOTICZ_OPTS TZ PORT config pull initdocker
+init: DATADIR TZ PORT config pull initdocker
 
-auto: DATADIR init next
+auto: init next
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -168,7 +168,7 @@ next: waitforport grab clean place run
 place:
 	$(eval DATADIR := $(shell cat DATADIR))
 	mkdir -p $(DATADIR)
-	mv datadir $(DATADIR)/
+	sudo mv datadir $(DATADIR)/
 	echo "$(DATADIR)/datadir" > DATADIR
 	sync
 	@echo "Moved datadir to $(DATADIR)"
@@ -176,5 +176,5 @@ place:
 waitforport:
 	$(eval PORT := $(shell cat PORT))
 	@echo "Waiting for port to become available"
-	@while ! curl --output /dev/null --silent --head --fail http://localhost:$(PORT); do sleep 10 && echo -n .; done;
+	@while ! curl --output /dev/null --silent --head --fail http://127.0.0.1:$(PORT); do sleep 10 && echo -n .; done;
 	@echo "check port $(PORT), it appears that now it is up!"
