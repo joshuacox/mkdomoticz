@@ -39,10 +39,10 @@ cmake -DCMAKE_BUILD_TYPE=Release . && \
 # compile
 make && \
 # Install
-install -m 0555 domoticz /usr/local/bin/domoticz && \
+# install -m 0555 domoticz /usr/local/bin/domoticz && \
 cd /tmp && \
 # Cleanup
-rm -Rf /src/domoticz && \
+# rm -Rf /src/domoticz && \
 
 # ouimeaux
 pip3 install -U ouimeaux && \
@@ -62,4 +62,4 @@ COPY start.sh /start.sh
 
 #ENTRYPOINT ["/src/domoticz/domoticz", "-dbase", "/config/domoticz.db", "-log", "/config/domoticz.log"]
 #CMD ["-www", "8080"]
-CMD ["/bin/bash", "/start.sh"]
+CMD [ "/start.sh" ]
