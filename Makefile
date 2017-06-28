@@ -15,35 +15,59 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run:  TZ PORT DATADIR rundocker
+run:  TZ PORT LOGDIR DATADIR rundocker
 
 prod: run
 
 temp: init
 
-init: TZ PORT config pull initdocker
+init: DATADIR TZ PORT config pull initdocker
 
-auto: DATADIR init next
+auto: init next
 
 initdocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
+	$(eval DOMOTICZ_OPTS := $(shell cat DOMOTICZ_OPTS))
+	$(eval TZ := $(shell cat TZ))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME)-init \
 	--cidfile="cid" \
+	-e TZ=$(TZ) \
+	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	-v $(TMP):/tmp \
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG)
 
+debugdocker:
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval NAME := $(shell cat NAME))
+	$(eval PORT := $(shell cat PORT))
+	$(eval TAG := $(shell cat TAG))
+	$(eval DOMOTICZ_OPTS := $(shell cat DOMOTICZ_OPTS))
+	$(eval TZ := $(shell cat TZ))
+	chmod 777 $(TMP)
+	@docker run --name=$(NAME)-init \
+	--cidfile="cid" \
+	-e TZ=$(TZ) \
+	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
+	-v $(TMP):/tmp \
+	--privileged \
+	-d \
+	-p $(PORT):8080 \
+	-t $(TAG) /bin/bash
+
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TZ := $(shell cat TZ))
+	$(eval DOMOTICZ_OPTS := $(shell cat DOMOTICZ_OPTS))
 	$(eval DATADIR := $(shell cat DATADIR))
+	$(eval LOGDIR := $(shell cat LOGDIR))
 	$(eval PORT := $(shell cat PORT))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
@@ -51,10 +75,12 @@ rundocker:
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-e TZ=$(TZ) \
+	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
 	-v $(DATADIR)/config:/config \
+	-v $(LOGDIR)/log:/log \
 	-t $(TAG)
 
 builddocker:
@@ -91,9 +117,19 @@ TZ:
 		read -r -p "Enter the timezone you wish to associate with this container [America/Denver]: " TZ; echo "$$TZ">>TZ; cat TZ; \
 	done ;
 
+DOMOTICZ_OPTS:
+	@while [ -z "$$DOMOTICZ_OPTS" ]; do \
+		read -r -p "Enter the domoticz options you wish to associate with this container: " DOMOTICZ_OPTS; echo "$$DOMOTICZ_OPTS">>DOMOTICZ_OPTS; cat DOMOTICZ_OPTS; \
+	done ;
+
 PORT:
 	@while [ -z "$$PORT" ]; do \
 		read -r -p "Enter the port you wish to associate with this container [PORT]: " PORT; echo "$$PORT">>PORT; cat PORT; \
+	done ;
+
+LOGDIR:
+	@while [ -z "$$LOGDIR" ]; do \
+		read -r -p "Enter the datadir you wish to associate with this container (i.e. /exports/mkdomoticz) [LOGDIR]: " LOGDIR; echo "$$LOGDIR">>LOGDIR; cat LOGDIR; \
 	done ;
 
 DATADIR:
@@ -132,7 +168,7 @@ next: waitforport grab clean place run
 place:
 	$(eval DATADIR := $(shell cat DATADIR))
 	mkdir -p $(DATADIR)
-	mv datadir $(DATADIR)/
+	sudo mv datadir $(DATADIR)/
 	echo "$(DATADIR)/datadir" > DATADIR
 	sync
 	@echo "Moved datadir to $(DATADIR)"
@@ -140,5 +176,5 @@ place:
 waitforport:
 	$(eval PORT := $(shell cat PORT))
 	@echo "Waiting for port to become available"
-	@while ! curl --output /dev/null --silent --head --fail http://localhost:$(PORT); do sleep 10 && echo -n .; done;
+	@while ! curl --output /dev/null --silent --head --fail http://127.0.0.1:$(PORT); do sleep 10 && echo -n .; done;
 	@echo "check port $(PORT), it appears that now it is up!"
