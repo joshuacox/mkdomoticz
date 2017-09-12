@@ -3,5 +3,5 @@ DATE=$(date +%Y%m%d)
 FORTUNE=$(fortune -s|sed 's/"//g')
 
 git pull
-sed -i "s/^ENV\ REACTIONDEV_UPDATED\ .*$/ENV REACTIONDEV_UPDATED\ $DATE/" Dockerfile
+sed -i "s/^ENV\ MKDOMOTICZ_UPDATED\ .*$/ENV MKDOMOTICZ_UPDATED\ $DATE/" Dockerfile
 git commit -am "$FORTUNE -- $DATE"
