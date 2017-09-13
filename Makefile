@@ -39,6 +39,8 @@ initdocker:
 	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	-v $(TMP):/tmp \
 	--privileged \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG)
@@ -57,9 +59,12 @@ debugdocker:
 	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	-v $(TMP):/tmp \
 	--privileged \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG) /bin/bash
+
 
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
