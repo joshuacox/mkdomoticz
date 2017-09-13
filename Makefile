@@ -161,7 +161,7 @@ push: TAG REGISTRY REGISTRY_PORT
 	docker push $(REGISTRY):$(REGISTRY_PORT)/$(TAG)
 
 armbuild: build
-	docker tag joshuacox/mkdomoticz joshuacox/mkdomoticz:arm
+	docker tag joshuacox/mkdomoticz:arm joshuacox/mkdomoticz:arm
 	docker push joshuacox/mkdomoticz:arm
 
 pull:
