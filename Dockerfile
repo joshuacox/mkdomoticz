@@ -1,7 +1,7 @@
 FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATED=20180309
+ENV MKDOMOTICZ_UPDATED=20180316
 
 # install packages
 RUN apt-get update && apt-get install -y \
