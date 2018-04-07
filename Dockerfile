@@ -3,6 +3,8 @@ MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
 ENV MKDOMOTICZ_UPDATED=20180406
 
+ARG DOMOTICZ_VERSION="master"
+
 # install packages
 RUN apt-get update && apt-get install -y \
 	git \
@@ -30,7 +32,7 @@ ln -s /src/open-zwave /src/open-zwave-read-only && \
 
 ## Domoticz installation
 # clone git source in src
-git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
+git clone -b "${DOMOTICZ_VERSION}" --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
 # Domoticz needs the full history to be able to calculate the version string
 cd /src/domoticz && \
 git fetch --unshallow && \
