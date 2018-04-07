@@ -1,7 +1,9 @@
 FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATE 20170628
+ENV MKDOMOTICZ_UPDATED=20180406
+
+ARG DOMOTICZ_VERSION="master"
 
 ARG DOMOTICZ_VERSION="master"
 
@@ -17,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 	zlib1g-dev \
 	libudev-dev \
 	python3-dev python3-pip \
-  fail2ban && \
+        fail2ban && \
     # linux-headers-generic
 
 ## OpenZwave installation
