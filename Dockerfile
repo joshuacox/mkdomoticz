@@ -5,8 +5,6 @@ ENV MKDOMOTICZ_UPDATED=20180406
 
 ARG DOMOTICZ_VERSION="master"
 
-ARG DOMOTICZ_VERSION="master"
-
 # install packages
 RUN apt-get update && apt-get install -y \
 	git \
