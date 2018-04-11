@@ -1,7 +1,7 @@
 FROM local-stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATED=20180326
+ENV MKDOMOTICZ_UPDATED=20180411
 
 # install packages
 RUN apt-get update && apt-get install -y \
