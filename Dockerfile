@@ -1,7 +1,7 @@
 FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATED=20180914
+ENV MKDOMOTICZ_UPDATED=20180921
 
 ARG DOMOTICZ_VERSION="master"
 
