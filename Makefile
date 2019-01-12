@@ -38,6 +38,8 @@ initdocker:
 	-e TZ=$(TZ) \
 	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	-v $(TMP):/tmp \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	--privileged \
 	-d \
 	-p $(PORT):8080 \
@@ -57,6 +59,8 @@ debugdocker:
 	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	-v $(TMP):/tmp \
 	--privileged \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG) /bin/bash
@@ -78,6 +82,8 @@ rundocker:
 	-e DOMOTICZ_OPTS=$(DOMOTICZ_OPTS) \
 	--privileged \
 	-d \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	-p $(PORT):8080 \
 	-v $(DATADIR)/config:/config \
 	-v $(LOGDIR)/log:/log \
