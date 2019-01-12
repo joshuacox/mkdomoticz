@@ -41,6 +41,8 @@ initdocker:
 	--device=/dev/ttyUSB0 \
 	--device=/dev/pts/0 \
 	--privileged \
+	--device=/dev/ttyUSB0 \
+	--device=/dev/pts/0 \
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG)
@@ -64,6 +66,7 @@ debugdocker:
 	-d \
 	-p $(PORT):8080 \
 	-t $(TAG) /bin/bash
+
 
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))

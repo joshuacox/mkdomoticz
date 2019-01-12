@@ -1,7 +1,9 @@
 FROM debian:stretch
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATE 20170628
+ENV MKDOMOTICZ_UPDATED=20181207
+
+ARG DOMOTICZ_VERSION="master"
 
 # install packages
 RUN apt-get update && apt-get install -y \
@@ -15,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 	zlib1g-dev \
 	libudev-dev \
 	python3-dev python3-pip \
-  fail2ban && \
+        fail2ban && \
     # linux-headers-generic
 
 ## OpenZwave installation
@@ -30,7 +32,7 @@ ln -s /src/open-zwave /src/open-zwave-read-only && \
 
 ## Domoticz installation
 # clone git source in src
-git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
+git clone -b "${DOMOTICZ_VERSION}" --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
 # Domoticz needs the full history to be able to calculate the version string
 cd /src/domoticz && \
 git fetch --unshallow && \
