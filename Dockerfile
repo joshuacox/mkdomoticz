@@ -1,22 +1,30 @@
-FROM local-stretch
+FROM local-buster
 MAINTAINER Josh Cox <josh 'at' webhosting.coop>
 
-ENV MKDOMOTICZ_UPDATE 20170628
+ENV MKDOMOTICZ_UPDATE 20201125
 
 # install packages
 RUN apt-get update && apt-get install -y \
-	git \
-	libssl1.0.2 libssl-dev \
+	make gcc g++ libssl-dev git libcurl4-gnutls-dev libusb-dev python3-dev zlib1g-dev \
+        libcereal-dev liblua5.3-dev uthash-dev \
 	build-essential cmake \
 	libboost-all-dev \
-	libsqlite3-0 libsqlite3-dev \
-	curl libcurl3 libcurl4-openssl-dev \
-	libusb-0.1-4 libusb-dev \
-	zlib1g-dev \
+	libsqlite3-dev \
+	curl \
+	wget \
+	libffi-dev \
+	libusb-0.1-4 \
 	libudev-dev \
-	python3-dev python3-pip \
-  fail2ban && \
-    # linux-headers-generic
+	python3-pip \
+        fail2ban && \
+        apt-get remove -y --purge --auto-remove cmake
+
+RUN apt-get update && apt-get install -y \
+        liblua5.2-dev
+
+COPY scripts /scripts
+
+RUN bash /scripts/cmaker && \
 
 ## OpenZwave installation
 # grep git version of openzwave

@@ -1,1 +1,1 @@
-joshuacox/mkdomoticz:arm
+joshuacox/mkdomoticz:latest
