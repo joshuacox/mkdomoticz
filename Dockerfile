@@ -34,13 +34,14 @@ git clone --depth 2 https://github.com/OpenZWave/open-zwave.git /src/open-zwave 
 cd /src/open-zwave && \
 # compile
 make && \
+make install && \
 
 # "install" in order to be found by domoticz
-ln -s /src/open-zwave /src/open-zwave-read-only && \
+#ln -s /src/open-zwave /src/open-zwave-read-only && \
 
 ## Domoticz installation
 # clone git source in src
-git clone -b "${DOMOTICZ_VERSION}" --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
+git clone --depth 2 https://github.com/domoticz/domoticz.git /src/domoticz && \
 # Domoticz needs the full history to be able to calculate the version string
 cd /src/domoticz && \
 git fetch --unshallow && \
